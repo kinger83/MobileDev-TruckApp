@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                                     user = mAuth.getCurrentUser();
                                     Toast.makeText(MainActivity.this, "Authentication successful.",
                                             Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(MainActivity.this, MainDisplay.class);
+                                    Intent intent = new Intent(MainActivity.this, LoggedInActivity.class);
                                     intent.putExtra("user", user);
                                     startActivity(intent);
                                 } else {

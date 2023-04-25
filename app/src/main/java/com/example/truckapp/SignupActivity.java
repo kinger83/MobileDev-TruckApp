@@ -3,16 +3,13 @@ package com.example.truckapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.Manifest;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.truckapp.databinding.ActivityMainBinding;
 import com.example.truckapp.databinding.ActivitySignupBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,6 +31,7 @@ public class SignupActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseUser user;
     StorageReference storageRef;
+    FirebaseStorage storage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivitySignupBinding.inflate(getLayoutInflater());
@@ -43,6 +41,7 @@ public class SignupActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         storageRef = FirebaseStorage.getInstance().getReference();
+        storage = FirebaseStorage.getInstance();
         binding.imageView.setImageResource(com.google.firebase.database.collection.R.drawable.common_google_signin_btn_icon_light_normal_background);
         // Setup OnClickListeners
         binding.imageView.setOnClickListener(new View.OnClickListener() {
@@ -81,15 +80,15 @@ public class SignupActivity extends AppCompatActivity {
                                     userMap.put("phone", phoneNumber);
                                     userMap.put("userID", user.getUid());
 
-                                    db.collection("users")
-                                            .add(userMap)
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    db.collection("users").document(user.getUid())
+                                            .set(userMap)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
-                                                public void onSuccess(DocumentReference documentReference) {
+                                                public void onSuccess(Void aVoid) {
                                                     binding.progressBar.setVisibility(View.GONE);
                                                     Toast.makeText(SignupActivity.this, "Authentication Success.",
                                                             Toast.LENGTH_SHORT).show();
-                                                    Intent intent = new Intent(SignupActivity.this, MainDisplay.class);
+                                                    Intent intent = new Intent(SignupActivity.this, LoggedInActivity.class);
                                                     intent.putExtra("user", user);
                                                     startActivity(intent);
                                                 }
