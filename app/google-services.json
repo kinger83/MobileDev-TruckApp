@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "944952882739",
+    "project_id": "truckapp-sit305",
+    "storage_bucket": "truckapp-sit305.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944952882739:android:040bc507b04c8d1901d546",
+        "android_client_info": {
+          "package_name": "com.example.truckapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "944952882739-iectfi4dp6csncigb3o3k0s4p3irdrab.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxmPPa1vtvGKLRyWBLTM5qAsyN4A1D9hk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "944952882739-iectfi4dp6csncigb3o3k0s4p3irdrab.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
