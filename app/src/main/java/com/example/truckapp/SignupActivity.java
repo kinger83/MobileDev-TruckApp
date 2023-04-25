@@ -3,7 +3,9 @@ package com.example.truckapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +33,7 @@ public class SignupActivity extends AppCompatActivity {
     ActivitySignupBinding binding;
     FirebaseAuth mAuth;
     FirebaseUser user;
-
+    StorageReference storageRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivitySignupBinding.inflate(getLayoutInflater());
@@ -38,8 +42,16 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(view);
         mAuth = FirebaseAuth.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+        storageRef = FirebaseStorage.getInstance().getReference();
+        binding.imageView.setImageResource(com.google.firebase.database.collection.R.drawable.common_google_signin_btn_icon_light_normal_background);
         // Setup OnClickListeners
+        binding.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //checkFilePermissions();
+                Toast.makeText(SignupActivity.this, "Add image here", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         binding.attemptSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,8 +60,9 @@ public class SignupActivity extends AppCompatActivity {
                 String email = binding.emailEditText.getText().toString();
                 String password = binding.passwordEditText.getText().toString();
                 String conPassword = binding.confirmPasswordEditText.getText().toString();
+                String phoneNumber = binding.phoneEditText.getText().toString();
 
-                if( checkFields(name, email, password, conPassword) == false){
+                if( checkFields(name, email, password, conPassword, phoneNumber) == false){
                     return;
                 }
                 binding.progressBar.setVisibility(View.VISIBLE);
@@ -65,6 +78,7 @@ public class SignupActivity extends AppCompatActivity {
                                     Map<String, Object> userMap = new HashMap<>();
                                     userMap.put("name", name);
                                     userMap.put("email", email);
+                                    userMap.put("phone", phoneNumber);
                                     userMap.put("userID", user.getUid());
 
                                     db.collection("users")
@@ -101,9 +115,17 @@ public class SignupActivity extends AppCompatActivity {
 
             }
         });
+
+        binding.backToLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }// end onCreate
 
-    private boolean checkFields(String name, String email, String password, String conPassword){
+    private boolean checkFields(String name, String email, String password, String conPassword, String phone){
         if(TextUtils.isEmpty(email)){
             Toast.makeText(SignupActivity.this, "Enter email", Toast.LENGTH_SHORT).show();
             return false;
@@ -120,6 +142,10 @@ public class SignupActivity extends AppCompatActivity {
             Toast.makeText(SignupActivity.this, "Enter confirm email", Toast.LENGTH_SHORT).show();
             return false;
         }
+        if(TextUtils.isEmpty(String.valueOf(phone))){
+            Toast.makeText(SignupActivity.this, "Enter confirm phone number", Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
         if(!password.equals(conPassword)){
             Toast.makeText(SignupActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
@@ -128,4 +154,8 @@ public class SignupActivity extends AppCompatActivity {
 
         return true;
     }
+
+
+
+
 }
