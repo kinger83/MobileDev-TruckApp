@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     FirebaseAuth  mAuth;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         View view = binding.getRoot();
         super.onCreate(savedInstanceState);
         setContentView(view);
+        binding.progressBar2.setVisibility(View.GONE);
         mAuth = FirebaseAuth.getInstance();
 
         // Setup OnClickListeners
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         binding.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                binding.progressBar2.setVisibility(View.VISIBLE);
                 String email = binding.emailEnterEditText.getText().toString();
                 String password = binding.passwordEditText.getText().toString();
 
@@ -46,15 +49,19 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                mAuth.createUserWithEmailAndPassword(email, password)
+                mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
+                                binding.progressBar2.setVisibility(View.GONE);
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    Toast.makeText(MainActivity.this, "Authentication failed.",
+                                    user = mAuth.getCurrentUser();
+                                    Toast.makeText(MainActivity.this, "Authentication successful.",
                                             Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(MainActivity.this, MainDisplay.class);
+                                    intent.putExtra("user", user);
+                                    startActivity(intent);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Toast.makeText(MainActivity.this, "Authentication failed.",
@@ -63,7 +70,9 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
-            }
+
+
+            }// end onClickListener
         });
 
 
