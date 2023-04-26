@@ -50,4 +50,14 @@
         app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:layout_constraintVertical_bias="0.47" />
 
+    <FrameLayout
+        android:id="@+id/fragmentFrameLayout"
+        android:layout_width="409dp"
+        android:layout_height="606dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeUserTextView">
+
+    </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

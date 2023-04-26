@@ -2,6 +2,7 @@ package com.example.truckapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ public class LoggedInActivity extends AppCompatActivity {
             startActivity(intent);
         }
         setUserData(user);
+        setTruckFragment();
 
         binding.menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,4 +105,9 @@ public class LoggedInActivity extends AppCompatActivity {
         }
                 });
     }// end setUserData
+    private void setTruckFragment(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragmentFrameLayout, new TruckDisplayFragment());
+        ft.commit();
+    }
 }
