@@ -1,6 +1,8 @@
 package com.example.truckapp;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,16 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.bumptech.glide.Glide;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class TruckAdapter extends RecyclerView.Adapter<TruckAdapter.TruckViewHolder> {
@@ -44,21 +51,30 @@ public class TruckAdapter extends RecyclerView.Adapter<TruckAdapter.TruckViewHol
         holder.truckName.setText(model.getTruckOwnerName());
         holder.truckCapacity.setText(model.getTruckCapacity());
         holder.truckCost.setText(model.getTruckCost());
-        String filePath = model.getTruckImage();
-        Log.d("here", filePath.toString());
+        String truckUrl = model.getTruckImage();
+        final Bitmap[] bitmap = new Bitmap[1];
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        StorageReference imageRef = storageReference.child(filePath);
-        imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String downloadUrl = uri.toString();
-                Log.d("*******", downloadUrl);
+        storageReference = FirebaseStorage.getInstance().getReference(model.getTruckOwnerName() + "/truck.png");
+        try {
+            File localFile = File.createTempFile("tempfile",".png");
+            storageReference.getFile(localFile)
+                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            bitmap[0] = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                            holder.truckImage.setImageBitmap(bitmap[0]);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, "Failed to retrieve image", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-                Glide.with(holder.itemView.getContext())
-                        .load(downloadUrl)
-                        .into(holder.truckImage);
-            }
-        });
 
 
     }
