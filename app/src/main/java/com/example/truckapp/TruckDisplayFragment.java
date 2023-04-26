@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -81,13 +82,7 @@ public class TruckDisplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_truck_display, container, false);
-//        RecyclerView truckRV = view.findViewById(R.id.truckRecycler);
         populateTrucksFromDB(view);
-//        TruckAdapter truckAdapter = new TruckAdapter(getContext(), truckList);
-//        LinearLayoutManager linearlayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-//
-//        truckRV.setLayoutManager(linearlayoutManager);
-//        truckRV.setAdapter(truckAdapter);
 
 
         // Inflate the layout for this fragment

@@ -73,8 +73,7 @@ public class LoggedInActivity extends AppCompatActivity {
                             return true;
                         }
                         if(item.getTitle().equals("My Orders")){
-                            Toast.makeText(LoggedInActivity.this, "Order Fragment", Toast.LENGTH_SHORT).show();
-                            //DisplayOrders()
+                            setOrderFragment();
                         }
                         return true;
                     }
@@ -83,6 +82,15 @@ public class LoggedInActivity extends AppCompatActivity {
             }
         });
 
+        binding.addOrderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CreateOrderActivity.class);
+                intent.putExtra("user", user);
+                intent.putExtra("userName", userName);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -108,6 +116,12 @@ public class LoggedInActivity extends AppCompatActivity {
     private void setTruckFragment(){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragmentFrameLayout, new TruckDisplayFragment());
+        ft.commit();
+    }
+
+    private void setOrderFragment(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragmentFrameLayout, new OrderDisplayFragment());
         ft.commit();
     }
 }
