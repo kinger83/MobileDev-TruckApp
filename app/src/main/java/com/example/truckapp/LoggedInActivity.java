@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.truckapp.databinding.ActivityLoggedInBinding;
@@ -45,16 +47,41 @@ public class LoggedInActivity extends AppCompatActivity {
         }
         setUserData(user);
 
-        binding.welcomeUserTextView.setText("Welcome " + userName);
-        binding.logoutButton.setOnClickListener(new View.OnClickListener() {
+        binding.menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.signOut();
-                Intent intent = new Intent(LoggedInActivity.this, MainActivity.class);
-                startActivity(intent);
-
+                PopupMenu popupMenu = new PopupMenu(LoggedInActivity.this, binding.menuButton);
+                popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if(item.getTitle().equals("Log Out")){
+                            mAuth.signOut();
+                            Intent intent = new Intent(LoggedInActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            return true;
+                        }
+                        if (item.getTitle().equals("Home")){
+                            Intent intent = new Intent(getApplicationContext(), LoggedInActivity.class);
+                            startActivity(intent);
+                            return true;
+                        }
+                        if(item.getTitle().equals("Account")){
+                            Toast.makeText(LoggedInActivity.this, "Not yet Implemented", Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+                        if(item.getTitle().equals("My Orders")){
+                            Toast.makeText(LoggedInActivity.this, "Order Fragment", Toast.LENGTH_SHORT).show();
+                            //DisplayOrders()
+                        }
+                        return true;
+                    }
+                });
+                popupMenu.show();
             }
         });
+
+
     }
 
 
@@ -67,6 +94,7 @@ public class LoggedInActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     Map doc = document.getData();
                     userName = doc.get("name").toString();
+                    binding.welcomeUserTextView.setText("Welcome " + userName);
 
             }
                 else {

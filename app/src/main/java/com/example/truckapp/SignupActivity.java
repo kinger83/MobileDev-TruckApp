@@ -3,8 +3,12 @@ package com.example.truckapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -21,10 +25,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class SignupActivity extends AppCompatActivity {
     ActivitySignupBinding binding;
@@ -32,6 +41,8 @@ public class SignupActivity extends AppCompatActivity {
     FirebaseUser user;
     StorageReference storageRef;
     FirebaseStorage storage;
+    private Uri filePath;
+    private final int PICK_IMAGE_REQUEST = 71;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivitySignupBinding.inflate(getLayoutInflater());
@@ -47,8 +58,9 @@ public class SignupActivity extends AppCompatActivity {
         binding.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //checkFilePermissions();
-                Toast.makeText(SignupActivity.this, "Add image here", Toast.LENGTH_SHORT).show();
+                chooseImage();
+
+
             }
         });
 
@@ -86,8 +98,8 @@ public class SignupActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     binding.progressBar.setVisibility(View.GONE);
-                                                    Toast.makeText(SignupActivity.this, "Authentication Success.",
-                                                            Toast.LENGTH_SHORT).show();
+                                                    uploadImage(user);
+
                                                     Intent intent = new Intent(SignupActivity.this, LoggedInActivity.class);
                                                     intent.putExtra("user", user);
                                                     startActivity(intent);
@@ -154,6 +166,63 @@ public class SignupActivity extends AppCompatActivity {
         return true;
     }
 
+    private void chooseImage(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null )
+        {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                binding.imageView.setImageBitmap(bitmap);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void uploadImage(FirebaseUser user) {
+        if(filePath != null)
+        {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+            storageRef = storageRef.child(user.getUid().toString()+"/" + "signUpImage");
+            storageRef.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(SignupActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(SignupActivity.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                        }
+                    });
+        }
+
+    }
 
 
 
