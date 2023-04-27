@@ -46,58 +46,78 @@
             android:layout_toEndOf="@id/ownerImage"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:text="Jacks Truck" />
+            android:textSize="12sp"
+            tools:text="order id" />
 
         <!-- Text VIew to display Course Rating -->
         <!-- Image used in present in drawable folder -->
+
         <TextView
             android:id="@+id/CapacityTtile"
-            android:layout_width="77dp"
+            android:layout_width="75dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/orderIDText"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="33dp"
             android:layout_toEndOf="@id/ownerImage"
             android:drawablePadding="2dp"
-            android:text="Capacity"
+            android:text="Time"
             android:textAlignment="center" />
 
         <TextView
             android:id="@+id/costTtile"
-            android:layout_width="97dp"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/orderIDText"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="33dp"
             android:layout_toEndOf="@+id/CapacityTtile"
             android:drawablePadding="2dp"
-            android:text="Cost per Hour"
+            android:text="Date"
             android:textAlignment="center" />
 
         <TextView
             android:id="@+id/pickupTimeText"
-            android:layout_width="77dp"
+            android:layout_width="76dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/CapacityTtile"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:layout_toEndOf="@id/ownerImage"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="4dp"
+            android:layout_toEndOf="@+id/ownerImage"
             android:drawablePadding="2dp"
             android:textAlignment="center"
             tools:text="2 tonnnes" />
 
         <TextView
             android:id="@+id/pickupDateText"
-            android:layout_width="97dp"
+            android:layout_width="111dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/CapacityTtile"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/pickupTimeText"
             android:drawablePadding="2dp"
             android:textAlignment="center"
             tools:text="65" />
+
+        <ImageView
+            android:id="@+id/shareIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/orderIDText"
+            android:layout_alignEnd="@+id/pickupDateText"
+            android:layout_marginTop="42dp"
+            android:layout_marginEnd="-46dp"
+            app:srcCompat="?attr/actionModeShareDrawable" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/orderIDText"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="9dp"
+            android:layout_toEndOf="@+id/ownerImage"
+            android:text="Pick up details:" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

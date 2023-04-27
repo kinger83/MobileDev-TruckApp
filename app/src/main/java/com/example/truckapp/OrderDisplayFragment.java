@@ -2,11 +2,25 @@ package com.example.truckapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +37,9 @@ public class OrderDisplayFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private ArrayList<OwnerModel> orderList = new ArrayList<>();
+    private ArrayList<OwnerModel> allOrderList = new ArrayList<>();
 
     public OrderDisplayFragment() {
         // Required empty public constructor
@@ -59,6 +76,47 @@ public class OrderDisplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_order_display, container, false);
+        View view = inflater.inflate(R.layout.fragment_order_display, container, false);
+        populateUserListFromDb(view);
+        return view;
+    }
+
+    private void populateUserListFromDb(View view){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser user;
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        db.collection("orders").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        orderList = new ArrayList<>();
+                        allOrderList = new ArrayList<>();
+                        for(QueryDocumentSnapshot docSnapshot : queryDocumentSnapshots){
+                            OwnerModel ownerModel = docSnapshot.toObject(OwnerModel.class);
+                            ownerModel.setId(docSnapshot.getId());
+                            allOrderList.add(ownerModel);
+                        }
+                        for(int i = 0; i < allOrderList.size(); i++){
+                            if(allOrderList.get(i).getOwner().equals(user.getUid())){
+                                orderList.add(allOrderList.get(i));
+                            }
+                        }
+
+                        RecyclerView orderRC = view.findViewById(R.id.oderRecyclerView);
+                        OwnerAdapter ownerAdapter = new OwnerAdapter(getContext(), orderList);
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+
+                        orderRC.setLayoutManager(linearLayoutManager);
+                        orderRC.setAdapter(ownerAdapter);
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "Failed to retrieve orders", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

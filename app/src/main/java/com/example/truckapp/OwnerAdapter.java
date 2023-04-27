@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -24,34 +26,36 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class TruckAdapter extends RecyclerView.Adapter<TruckAdapter.TruckViewHolder> {
+public class OwnerAdapter extends RecyclerView.Adapter<OwnerAdapter.OwnerViewHolder> {
     private final Context context;
-    private final ArrayList<TruckModel> truckList;
+    private final ArrayList<OwnerModel> ownerList;
 
 
-    public TruckAdapter(Context context, ArrayList<TruckModel> truckList) {
+    public OwnerAdapter(Context context, ArrayList<OwnerModel> ownerList) {
         this.context = context;
-        this.truckList = truckList;
+        this.ownerList = ownerList;
     }
     @NonNull
     @Override
-    public TruckAdapter.TruckViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public OwnerAdapter.OwnerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // to inflate the layout for each item of recycler view.
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.truck_cardview_layout, parent, false);
-        return new TruckAdapter.TruckViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_cardview_layout, parent, false);
+        return new OwnerAdapter.OwnerViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TruckAdapter.TruckViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull OwnerAdapter.OwnerViewHolder holder, int position) {
         // to set data to textview and imageview of each card layout
-        TruckModel model = truckList.get(position);
-        holder.truckName.setText(model.getTruckOwnerName());
-        holder.truckCapacity.setText(model.getTruckCapacity());
-        holder.truckCost.setText(model.getTruckCost());
-        String truckUrl = model.getTruckImage();
+        OwnerModel model = ownerList.get(position);
+        holder.user.setText(model.getId());
+        holder.date.setText(model.getDate());
+        holder.time.setText(model.getTime());
         final Bitmap[] bitmap = new Bitmap[1];
+        FirebaseUser user;
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        storageReference = FirebaseStorage.getInstance().getReference(model.getTruckOwnerName() + "/truck.png");
+        storageReference = FirebaseStorage.getInstance().getReference(user.getUid().toString()+"/" + "signUpImage");
         try {
             File localFile = File.createTempFile("tempfile",".png");
             storageReference.getFile(localFile)
@@ -59,7 +63,7 @@ public class TruckAdapter extends RecyclerView.Adapter<TruckAdapter.TruckViewHol
                         @Override
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                             bitmap[0] = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                            holder.truckImage.setImageBitmap(bitmap[0]);
+                            holder.owenerImage.setImageBitmap(bitmap[0]);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -79,7 +83,7 @@ public class TruckAdapter extends RecyclerView.Adapter<TruckAdapter.TruckViewHol
     @Override
     public int getItemCount() {
         // this method is used for showing number of card items in recycler view
-        return truckList.size();
+        return ownerList.size();
     }
 
 
@@ -87,20 +91,21 @@ public class TruckAdapter extends RecyclerView.Adapter<TruckAdapter.TruckViewHol
 
 
 
-    public static class TruckViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView truckImage;
-        private final TextView truckName;
-        private final TextView truckCapacity;
-        private final TextView truckCost;
+    public static class OwnerViewHolder extends RecyclerView.ViewHolder {
+        private final ImageView owenerImage;
+        private final TextView user;
+        private final TextView time;
+        private final TextView date;
 
-        public TruckViewHolder(@NonNull View itemView) {
+        public OwnerViewHolder(@NonNull View itemView) {
             super(itemView);
-            truckImage = itemView.findViewById(R.id.ownerImage);
-            truckName = itemView.findViewById(R.id.orderIDText);
-            truckCapacity = itemView.findViewById(R.id.pickupTimeText);
-            truckCost = itemView.findViewById(R.id.pickupDateText);
+            owenerImage = itemView.findViewById(R.id.ownerImage);
+            user = itemView.findViewById(R.id.orderIDText);
+            time = itemView.findViewById(R.id.pickupTimeText);
+            date = itemView.findViewById(R.id.pickupDateText);
         }
     }
 
 
 }// end class
+
