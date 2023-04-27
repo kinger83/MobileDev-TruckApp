@@ -3,6 +3,7 @@ package com.example.truckapp;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,16 +28,19 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class OwnerAdapter extends RecyclerView.Adapter<OwnerAdapter.OwnerViewHolder> {
     private final Context context;
-    private final ArrayList<OwnerModel> ownerList;
+    private static ArrayList<OwnerModel> ownerList = new ArrayList<>();
+    static FragmentActivity fragmentActivity;
 
 
-    public OwnerAdapter(Context context, ArrayList<OwnerModel> ownerList) {
+    public OwnerAdapter(Context context, ArrayList<OwnerModel> ownerList, FragmentActivity activity) {
         this.context = context;
         this.ownerList = ownerList;
+        this.fragmentActivity = activity;
     }
     @NonNull
     @Override
@@ -91,7 +98,7 @@ public class OwnerAdapter extends RecyclerView.Adapter<OwnerAdapter.OwnerViewHol
 
 
 
-    public static class OwnerViewHolder extends RecyclerView.ViewHolder {
+    public static class OwnerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final ImageView owenerImage;
         private final TextView user;
         private final TextView time;
@@ -103,6 +110,24 @@ public class OwnerAdapter extends RecyclerView.Adapter<OwnerAdapter.OwnerViewHol
             user = itemView.findViewById(R.id.orderIDText);
             time = itemView.findViewById(R.id.pickupTimeText);
             date = itemView.findViewById(R.id.pickupDateText);
+            itemView.setOnClickListener(this);
+        }
+        @Override
+        public void onClick(View view){
+            int pos = getLayoutPosition();
+            OwnerModel order = ownerList.get(pos);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("order", (Serializable) order);
+
+            orderDetailsFragment fragment = new orderDetailsFragment();
+            fragment.setArguments(bundle);
+
+
+            FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+                    .replace(R.id.mainDisplay, fragment)
+                    .addToBackStack(null);
+            fragmentTransaction.commit();
         }
     }
 

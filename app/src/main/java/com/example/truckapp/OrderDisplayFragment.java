@@ -104,7 +104,7 @@ public class OrderDisplayFragment extends Fragment {
                         }
 
                         RecyclerView orderRC = view.findViewById(R.id.oderRecyclerView);
-                        OwnerAdapter ownerAdapter = new OwnerAdapter(getContext(), orderList);
+                        OwnerAdapter ownerAdapter = new OwnerAdapter(getContext(), orderList, getActivity());
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
                         orderRC.setLayoutManager(linearLayoutManager);

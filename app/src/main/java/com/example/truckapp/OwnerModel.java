@@ -1,6 +1,8 @@
 package com.example.truckapp;
 
-public class OwnerModel {
+import java.io.Serializable;
+
+public class OwnerModel implements Serializable {
     private String owner, name, date, time, address, type, weight, length, width, height, truck, id;
 
     public OwnerModel(String owner, String name, String date, String time, String address, String type, String weight, String length, String width, String height, String truck, String id) {
