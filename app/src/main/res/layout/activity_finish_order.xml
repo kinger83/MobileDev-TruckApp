@@ -90,7 +90,7 @@
         android:layout_marginTop="12dp"
         android:ems="10"
         android:hint="Weight"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
@@ -102,7 +102,7 @@
         android:layout_marginEnd="40dp"
         android:ems="10"
         android:hint="Width"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
@@ -114,7 +114,7 @@
         android:layout_marginTop="12dp"
         android:ems="10"
         android:hint="Length"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/weightEditText" />
 
@@ -126,7 +126,7 @@
         android:layout_marginEnd="40dp"
         android:ems="10"
         android:hint="Height"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/widthEditText" />
 
@@ -214,4 +214,15 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/otherTruckEditText" />
+
+    <ProgressBar
+        android:id="@+id/createProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="272dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
