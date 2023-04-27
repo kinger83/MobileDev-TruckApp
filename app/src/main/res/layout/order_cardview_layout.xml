@@ -106,8 +106,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/orderIDText"
             android:layout_alignEnd="@+id/pickupDateText"
-            android:layout_marginTop="42dp"
-            android:layout_marginEnd="-46dp"
+            android:layout_marginTop="27dp"
+            android:layout_marginEnd="-28dp"
             app:srcCompat="?attr/actionModeShareDrawable" />
 
         <TextView

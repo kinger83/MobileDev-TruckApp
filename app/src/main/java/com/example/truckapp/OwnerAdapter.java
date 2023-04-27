@@ -1,6 +1,7 @@
 package com.example.truckapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -57,6 +58,13 @@ public class OwnerAdapter extends RecyclerView.Adapter<OwnerAdapter.OwnerViewHol
         holder.user.setText(model.getId());
         holder.date.setText(model.getDate());
         holder.time.setText(model.getTime());
+        holder.share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Share order", Toast.LENGTH_SHORT).show();
+                shareOrder(model);
+            }
+        });
         final Bitmap[] bitmap = new Bitmap[1];
         FirebaseUser user;
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -103,6 +111,7 @@ public class OwnerAdapter extends RecyclerView.Adapter<OwnerAdapter.OwnerViewHol
         private final TextView user;
         private final TextView time;
         private final TextView date;
+        private final ImageView share;
 
         public OwnerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -110,6 +119,7 @@ public class OwnerAdapter extends RecyclerView.Adapter<OwnerAdapter.OwnerViewHol
             user = itemView.findViewById(R.id.orderIDText);
             time = itemView.findViewById(R.id.pickupTimeText);
             date = itemView.findViewById(R.id.pickupDateText);
+            share = itemView.findViewById(R.id.shareIcon);
             itemView.setOnClickListener(this);
         }
         @Override
@@ -129,6 +139,14 @@ public class OwnerAdapter extends RecyclerView.Adapter<OwnerAdapter.OwnerViewHol
                     .addToBackStack(null);
             fragmentTransaction.commit();
         }
+    }
+
+    private void shareOrder(OwnerModel order){
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Order Details");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "Order: " + order.getId() + "\nDate: " + order.getDate() + "\nTime: " + order.getTime());
+        context.startActivity(Intent.createChooser(shareIntent, "Share order details"));
     }
 
 
