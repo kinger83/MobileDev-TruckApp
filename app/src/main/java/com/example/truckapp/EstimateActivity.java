@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -27,9 +28,9 @@ import com.google.maps.errors.ApiException;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
 import com.google.maps.model.TravelMode;
-import com.google.android.gms.maps.MapFragment;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.List;
 
 
@@ -42,6 +43,8 @@ public class EstimateActivity extends AppCompatActivity implements OnMapReadyCal
     MarkerOptions pickup, destination;
     FrameLayout map;
     GoogleMap gMap;
+    GeoApiContext geoApiContext;
+    Double price;
 
 
     @Override
@@ -54,11 +57,9 @@ public class EstimateActivity extends AppCompatActivity implements OnMapReadyCal
         if (bundle != null) {
             order = (OwnerModel) bundle.getSerializable("order");
             if (order != null) {
-                setRoute();
+                getFlagLocations();
             }
         }
-        //map = findViewById(R.id.map);
-
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
@@ -68,16 +69,24 @@ public class EstimateActivity extends AppCompatActivity implements OnMapReadyCal
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        GeoApiContext geoApiContext = new GeoApiContext.Builder()
+        geoApiContext = new GeoApiContext.Builder()
                 .apiKey("AIzaSyC0IrZUHCKy4IJH-bNlWqI-IFNIdKD4zvI")
                 .build();
 
 
-        setMap(googleMap);
+        try {
+            setMap(googleMap);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ApiException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
-    private void setRoute(){
+    private void getFlagLocations(){
         pickupAddress = order.getPickupAddress();
         pickupLong = order.getPickupLong();
         pickupLat = order.getPickupLat();
@@ -92,7 +101,7 @@ public class EstimateActivity extends AppCompatActivity implements OnMapReadyCal
         destination = new MarkerOptions().position(destinationn).title("Destination");
     }
 
-    private void setMap(GoogleMap googleMap) {
+    private void setMap(GoogleMap googleMap) throws IOException, InterruptedException, ApiException {
         this.gMap = googleMap;
         if (pickup != null && destination != null) {
             this.gMap.addMarker(pickup);
@@ -101,6 +110,59 @@ public class EstimateActivity extends AppCompatActivity implements OnMapReadyCal
             int padding = 100;
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
             this.gMap.moveCamera(cameraUpdate);
+
+            // Create a Directions API request
+            DirectionsResult result = DirectionsApi.newRequest(geoApiContext)
+                    .origin(new com.google.maps.model.LatLng(Double.valueOf(pickupLat), Double.valueOf(pickupLong)))
+                    .destination(new com.google.maps.model.LatLng(Double.valueOf(deliveryLat), Double.valueOf(deliveryLong)))
+                    .await();
+            DirectionsRoute[] routes = result.routes; // Get all the routes
+            double totalDistance = 0.0;
+
+            // Loop through each route and calculate the total distance
+            for (DirectionsRoute route : routes) {
+                totalDistance += route.legs[0].distance.inMeters; // Add the distance of each route
+            }
+            totalDistance = totalDistance/1000;
+            distance = String.format("%.2f km", totalDistance); // Convert meters to kilometers
+
+            // Display the total distance in your UI (e.g., TextView)
+            //binding.distanceTextView.setText(distance);
+
+            // Loop through each route and calculate the total time
+            long totalTimeSeconds = 0;
+            for (DirectionsRoute route : routes) {
+                totalTimeSeconds += route.legs[0].duration.inSeconds; // Add the duration of each route
+            }
+
+            long hours = totalTimeSeconds / 3600;
+            long minutes = (totalTimeSeconds % 3600) / 60;
+            time = String.format("%02d:%02d", hours, minutes); // Format the time as HH:mm
+
+            // Display the total time in your UI (e.g., TextView)
+            //binding.timeTextView.setText(time);
+
+            // Extract the encoded polyline from the DirectionsResult
+            String encodedPolyline = result.routes[0].overviewPolyline.getEncodedPath();
+
+            Log.d("**********Distance", distance);
+            Log.d("**********Time", time);
+
+
+            // Decode the polyline to a list of LatLng points
+            List<LatLng> decodedPolyline = PolyUtil.decode(encodedPolyline);
+
+            // Create a PolylineOptions and add the decoded polyline points
+            PolylineOptions polylineOptions = new PolylineOptions()
+                    .addAll(decodedPolyline)
+                    .width(5)
+                    .color(Color.BLUE);
+
+            // Add the polyline to the map
+            gMap.addPolyline(polylineOptions);
+
+            price = 100 + (totalDistance * 4);
+            binding.estimateDetails.setText("Distance: " + distance +"         Time: " + time +"\nPrice: " + price);
         }
     }
 
