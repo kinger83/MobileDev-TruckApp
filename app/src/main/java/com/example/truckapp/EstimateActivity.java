@@ -33,93 +33,83 @@ import java.io.IOException;
 import java.util.List;
 
 
-    public class EstimateActivity extends AppCompatActivity implements OnMapReadyCallback {
-        ActivityEstimateBinding binding;
-        Bundle bundle;
-        OwnerModel order;
-        String pickupAddress, pickupLat, pickupLong, deliveryAddress, deliveryLat, deliveryLong, distance, time;
-        LatLng pickupp, destinationn;
-        MarkerOptions pickup, destination;
-        FrameLayout map;
-        GoogleMap gMap;
+public class EstimateActivity extends AppCompatActivity implements OnMapReadyCallback {
+    ActivityEstimateBinding binding;
+    Bundle bundle;
+    OwnerModel order;
+    String pickupAddress, pickupLat, pickupLong, deliveryAddress, deliveryLat, deliveryLong, distance, time;
+    LatLng pickupp, destinationn;
+    MarkerOptions pickup, destination;
+    FrameLayout map;
+    GoogleMap gMap;
 
-        GeoApiContext geoApiContext;
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            binding = ActivityEstimateBinding.inflate(getLayoutInflater());
-            View view = binding.getRoot();
-            setContentView(view);
-            bundle = getIntent().getBundleExtra("job");
-            if (bundle != null) {
-                order = (OwnerModel) bundle.getSerializable("order");
-                if (order != null) {
-                    setRoute();
-                }
-            }
-            map = findViewById(R.id.map);
-            try {
-                geoApiContext = new GeoApiContext.Builder()
-                        .apiKey("AIzaSyC0IrZUHCKy4IJH-bNlWqI-IFNIdKD4zvI")
-                        .build();
-            } catch(Exception e){
-                e.printStackTrace();
-                throw  new RuntimeException("Fqiled to build geoApiContext:" + e.getMessage());
-            }
-
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-            if (mapFragment != null) {
-                mapFragment.getMapAsync(this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityEstimateBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        bundle = getIntent().getBundleExtra("job");
+        if (bundle != null) {
+            order = (OwnerModel) bundle.getSerializable("order");
+            if (order != null) {
+                setRoute();
             }
         }
+        //map = findViewById(R.id.map);
 
-        @Override
-        public void onMapReady(@NonNull GoogleMap googleMap) {
-            try {
-                setMap(googleMap);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (ApiException e) {
-                throw new RuntimeException(e);
-            }
-        }
 
-        private void setRoute(){
-            pickupAddress = order.getPickupAddress();
-            pickupLong = order.getPickupLong();
-            pickupLat = order.getPickupLat();
-            deliveryAddress = order.getDeliveryAddress();
-            deliveryLat = order.getPickupLat();
-            deliveryLong = order.getDeliverLong();
-
-            pickupp = new LatLng(Double.valueOf(pickupLat), Double.valueOf(pickupLong));
-            destinationn = new LatLng(Double.valueOf(deliveryLat), Double.valueOf(deliveryLong));
-
-            pickup = new MarkerOptions().position(pickupp).title("Pick Up");
-            destination = new MarkerOptions().position(destinationn).title("Destination");
-        }
-
-        private void setMap(GoogleMap googleMap) throws IOException, InterruptedException, ApiException {
-            this.gMap = googleMap;
-            if (pickup != null && destination != null) {
-                this.gMap.addMarker(pickup);
-                this.gMap.addMarker(destination);
-                LatLngBounds bounds = calculateLatLngBounds(pickup, destination);
-                int padding = 100;
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-                this.gMap.moveCamera(cameraUpdate);
-            }
-        }
-
-        private LatLngBounds calculateLatLngBounds(MarkerOptions marker1, MarkerOptions marker2) {
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            if (marker1 != null && marker2 != null) {
-                builder.include(marker1.getPosition());
-                builder.include(marker2.getPosition());
-            }
-            return builder.build();
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
         }
     }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        GeoApiContext geoApiContext = new GeoApiContext.Builder()
+                .apiKey("AIzaSyC0IrZUHCKy4IJH-bNlWqI-IFNIdKD4zvI")
+                .build();
+
+
+        setMap(googleMap);
+
+    }
+
+    private void setRoute(){
+        pickupAddress = order.getPickupAddress();
+        pickupLong = order.getPickupLong();
+        pickupLat = order.getPickupLat();
+        deliveryAddress = order.getDeliveryAddress();
+        deliveryLat = order.getPickupLat();
+        deliveryLong = order.getDeliverLong();
+
+        pickupp = new LatLng(Double.valueOf(pickupLat), Double.valueOf(pickupLong));
+        destinationn = new LatLng(Double.valueOf(deliveryLat), Double.valueOf(deliveryLong));
+
+        pickup = new MarkerOptions().position(pickupp).title("Pick Up");
+        destination = new MarkerOptions().position(destinationn).title("Destination");
+    }
+
+    private void setMap(GoogleMap googleMap) {
+        this.gMap = googleMap;
+        if (pickup != null && destination != null) {
+            this.gMap.addMarker(pickup);
+            this.gMap.addMarker(destination);
+            LatLngBounds bounds = calculateLatLngBounds(pickup, destination);
+            int padding = 100;
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            this.gMap.moveCamera(cameraUpdate);
+        }
+    }
+
+    private LatLngBounds calculateLatLngBounds(MarkerOptions marker1, MarkerOptions marker2) {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        if (marker1 != null && marker2 != null) {
+            builder.include(marker1.getPosition());
+            builder.include(marker2.getPosition());
+        }
+        return builder.build();
+    }
+}
