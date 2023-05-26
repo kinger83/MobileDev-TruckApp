@@ -44,6 +44,10 @@
         <meta-data
             android:name="com.google.android.truckapp"
             android:value="AIzaSyC0IrZUHCKy4IJH-bNlWqI-IFNIdKD4zvI"/>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC0IrZUHCKy4IJH-bNlWqI-IFNIdKD4zvI" />
     </application>
 
 </manifest>

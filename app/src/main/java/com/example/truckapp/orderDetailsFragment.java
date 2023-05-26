@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.truckapp.databinding.FragmentOrderDetailsBinding;
@@ -96,7 +95,7 @@ public class orderDetailsFragment extends Fragment {
         binding.detailsOrderIdView.setText("Order Number: " + order.getId());
         binding.detailsDateView.setText("Pickup Date: " + order.getDate());
         binding.detailsTimeView.setText("Pickup Time: " + order.getTime());
-        binding.detailsAddressView.setText("Pickup Address:\n" + order.getAddress());
+        binding.detailsAddressView.setText("Pickup Address:\n" + order.getPickupAddress());
         binding.detailsWeightView.setText("Weight:\n" + order.getWeight());
         binding.detailsGoodsTypeView.setText("Goods Type:\n" + order.getType());
         binding.detailsWidthView.setText("Width:\n" + order.getWidth());

@@ -3,14 +3,16 @@ package com.example.truckapp;
 import java.io.Serializable;
 
 public class OwnerModel implements Serializable {
-    private String owner, name, date, time, address, type, weight, length, width, height, truck, id, destination;
+    private String owner, name, date, time, pickupAddress, pickupLat, pickupLong, deliveryLat, deliverLong, type, weight, length, width, height, truck, id, deliveryAddress;
 
-    public OwnerModel(String owner, String name, String date, String time, String address, String destination, String type, String weight, String length, String width, String height, String truck, String id) {
+    public OwnerModel(String owner, String name, String date, String time, String pickupAddress, String deliveryAddress, String deliveryLong, String deliverLat, String pickupLat, String pickupLong, String type, String weight, String length, String width, String height, String truck, String id) {
         this.owner = owner;
         this.name = name;
         this.date = date;
         this.time = time;
-        this.address = address;
+        this.pickupAddress = pickupAddress;
+        this.pickupLat = getPickupLat();
+        this.pickupLong = pickupLong;
         this.type = type;
         this.weight = weight;
         this.length = length;
@@ -18,15 +20,57 @@ public class OwnerModel implements Serializable {
         this.height = height;
         this.truck = truck;
         this.id = id;
-        this.destination = destination;
+        this.deliveryAddress = deliveryAddress;
+        this.deliveryLat = deliverLat;
+        this.deliverLong = deliveryLong;
     }
 
     public String getDestination() {
-        return destination;
+        return deliveryAddress;
     }
 
     public void setDestination(String destination) {
-        this.destination = destination;
+        this.deliverLong = destination;
+    }
+
+    public String getPickupLat() {
+        return pickupLat;
+    }
+
+    public void setPickupLat(String pickupLat) {
+        this.pickupLat = pickupLat;
+    }
+
+    public String getPickupLong() {
+        return pickupLong;
+    }
+
+    public void setPickupLong(String pickupLong) {
+        this.pickupLong = pickupLong;
+    }
+
+    public String getDeliveryLat() {
+        return deliveryLat;
+    }
+
+    public void setDeliveryLat(String deliveryLat) {
+        this.deliveryLat = deliveryLat;
+    }
+
+    public String getDeliverLong() {
+        return deliverLong;
+    }
+
+    public void setDeliverLong(String deliverLong) {
+        this.deliverLong = deliverLong;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
     }
 
     public OwnerModel() {
@@ -34,7 +78,7 @@ public class OwnerModel implements Serializable {
         this.name = "";
         this.date = "";
         this.time = "";
-        this.address = "";
+        this.pickupAddress = "";
         this.type = "";
         this.weight = "";
         this.length = "";
@@ -42,7 +86,11 @@ public class OwnerModel implements Serializable {
         this.height = "";
         this.truck = "";
         this.id = "";
-        this.destination = "";
+        this.deliveryAddress = "";
+        this.pickupLat = "";
+        this.pickupLong = "";
+        this.deliveryLat = "";
+        this.deliverLong = "";
     }
 
     public void setId(String id) {
@@ -85,12 +133,12 @@ public class OwnerModel implements Serializable {
         this.time = time;
     }
 
-    public String getAddress() {
-        return address;
+    public String getPickupAddress() {
+        return pickupAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setPickupAddress(String pickupAddress) {
+        this.pickupAddress = pickupAddress;
     }
 
     public String getType() {
