@@ -3,9 +3,9 @@ package com.example.truckapp;
 import java.io.Serializable;
 
 public class OwnerModel implements Serializable {
-    private String owner, name, date, time, address, type, weight, length, width, height, truck, id;
+    private String owner, name, date, time, address, type, weight, length, width, height, truck, id, destination;
 
-    public OwnerModel(String owner, String name, String date, String time, String address, String type, String weight, String length, String width, String height, String truck, String id) {
+    public OwnerModel(String owner, String name, String date, String time, String address, String destination, String type, String weight, String length, String width, String height, String truck, String id) {
         this.owner = owner;
         this.name = name;
         this.date = date;
@@ -18,6 +18,15 @@ public class OwnerModel implements Serializable {
         this.height = height;
         this.truck = truck;
         this.id = id;
+        this.destination = destination;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 
     public OwnerModel() {
@@ -33,6 +42,7 @@ public class OwnerModel implements Serializable {
         this.height = "";
         this.truck = "";
         this.id = "";
+        this.destination = "";
     }
 
     public void setId(String id) {

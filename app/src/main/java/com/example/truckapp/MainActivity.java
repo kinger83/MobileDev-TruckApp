@@ -3,9 +3,12 @@ package com.example.truckapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -28,7 +31,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(view);
         binding.progressBar2.setVisibility(View.GONE);
+
         mAuth = FirebaseAuth.getInstance();
+        String appinfo = getApplicationContext().getPackageName();
+        Log.d("************************", appinfo);
 
         // Setup OnClickListeners
 

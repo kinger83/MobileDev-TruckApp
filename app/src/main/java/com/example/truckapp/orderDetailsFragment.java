@@ -105,10 +105,12 @@ public class orderDetailsFragment extends Fragment {
         binding.detailsRequestTruckView.setText("Requested Truck:\n" + order.getTruck());
         setImage();
 
-        binding.detailsCallDriverButton.setOnClickListener(new View.OnClickListener() {
+        binding.detailsGetEstimateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Call Driver Not Implemented.", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), EstimateActivity.class);
+                intent.putExtra("job", bundle);
+                startActivity(intent);
             }
         });
 

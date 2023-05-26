@@ -3,12 +3,9 @@ package com.example.truckapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -30,7 +27,7 @@ public class FinishOrderActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user;
 
-    String name, date, time, address, type, weight, length, width, height, truck;
+    String name, date, time, pickupAddress, pickupLat, pickupLong, deliverAddress, deliverLat, deliverLong, type, weight, length, width, height, truck;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityFinishOrderBinding.inflate(getLayoutInflater());
@@ -41,7 +38,12 @@ public class FinishOrderActivity extends AppCompatActivity {
         name = intent.getStringExtra("name");
         date = intent.getStringExtra("date");
         time = intent.getStringExtra("time");
-        address = intent.getStringExtra("address");
+        pickupAddress = intent.getStringExtra("address");
+        pickupLat = intent.getStringExtra("pickupLat");
+        pickupLong = intent.getStringExtra("pickupLong");
+        deliverAddress = intent.getStringExtra("deliverAddress");
+        deliverLat = intent.getStringExtra("deliverLat");
+        deliverLong = intent.getStringExtra("deliverLong");
         user = mAuth.getCurrentUser();
         binding.createProgressBar.setVisibility(View.GONE);
 
@@ -71,7 +73,12 @@ public class FinishOrderActivity extends AppCompatActivity {
                 userMap.put("name", name);
                 userMap.put("date", date);
                 userMap.put("time", time);
-                userMap.put("address", address);
+                userMap.put("address", pickupAddress);
+                userMap.put("pickupLat", pickupLat);
+                userMap.put("pickupLong", pickupLong);
+                userMap.put("deliverAddress", deliverAddress);
+                userMap.put("deliverLat", deliverLat);
+                userMap.put("deliverLong", deliverLong);
                 userMap.put("type", type);
                 userMap.put("weight", weight);
                 userMap.put("length", length);

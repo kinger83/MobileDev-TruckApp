@@ -24,7 +24,7 @@
         android:layout_width="152dp"
         android:layout_height="46dp"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="4dp"
         android:gravity="center"
         android:text="Receiver Name:"
         android:textSize="20sp"
@@ -37,7 +37,7 @@
         android:layout_width="194dp"
         android:layout_height="45dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="4dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintStart_toEndOf="@+id/textView3"
@@ -49,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:text="Pick up date:"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -61,7 +61,7 @@
         android:layout_width="120dp"
         android:layout_height="47dp"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:gravity="center"
         android:text="Pick up time:"
         android:textSize="20sp"
@@ -69,59 +69,57 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/calendarView" />
 
-    <CalendarView
-        android:id="@+id/calendarView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
     <EditText
         android:id="@+id/pickupTimeEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
         android:ems="10"
         android:hint="3pm - 1300"
         android:inputType="textPersonName"
         app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/calendarView" />
 
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="334dp"
+        android:layout_height="314dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
     <EditText
         android:id="@+id/addressEditText"
         android:layout_width="327dp"
         android:layout_height="44dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="12dp"
         android:ems="10"
-        android:hint="Your Address"
+        android:hint="Pick up Address"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pickupTimeEditText" />
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="333dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="8dp"
-        android:text="Pick up Location"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
     <Button
         android:id="@+id/nextButton"
         android:layout_width="190dp"
         android:layout_height="45dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="28dp"
         android:text="Next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/createDropOffLocation" />
+
+    <EditText
+        android:id="@+id/createDropOffLocation"
+        android:layout_width="329dp"
+        android:layout_height="51dp"
+        android:ems="10"
+        android:hint="Destination Address"
+        android:inputType="textPostalAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addressEditText" />
