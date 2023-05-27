@@ -284,14 +284,12 @@ public class EstimateActivity extends AppCompatActivity implements OnMapReadyCal
     private void makeCall(){
         String phoneNumber = "0477228775"; // Replace with the  phone number from driver
 
-        Intent intent = new Intent(Intent.ACTION_CALL);
+        Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:" + phoneNumber));
 
-        if (intent.resolveActivity(getPackageManager()) != null) {
+   
             startActivity(intent);
-        } else {
-            Toast.makeText(this, "No app available to make a phone call.", Toast.LENGTH_SHORT).show();
-        }
+
 
 
     }
